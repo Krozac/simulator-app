@@ -1,50 +1,73 @@
-# Boids Simulation
+# React + TypeScript + Vite
 
-Ce projet est une simulation de boids, des entités autonomes qui imitent le comportement de vol des oiseaux en utilisant des règles simples de séparation, d'alignement et de cohésion.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Structure du Projet
+Currently, two official plugins are available:
 
-- **index.html** : Fichier HTML principal qui charge le canvas et initialise la simulation.
-- **public/index.css** : Feuille de style pour la simulation.
-- **src/components** : Contient les composants utilisés par les entités.
-- **src/entities** : Contient les entités de la simulation.
-- **src/systems** : Contient les systèmes qui gèrent les comportements des entités.
-- **src/old** : Contient des fichiers de code plus anciens ou expérimentaux.
-- **src/types** : Contient les types utilisés dans le projet.
-- **tsconfig.json** : Configuration TypeScript.
-- **package.json** : Dépendances du projet.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Installation
+## React Compiler
 
-1. Clonez le dépôt :
-    ```bash
-    git clone <URL_du_dépôt>
-    ```
-2. Installez les dépendances :
-    ```bash
-    npm install
-    ```
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Utilisation
+## Expanding the ESLint configuration
 
-1. Compilez le projet TypeScript :
-    ```bash
-    npx tsc
-    ```
-2. Ouvrez `index.html` dans votre navigateur pour voir la simulation en action.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## Fonctionnalités
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-- **Simulation de Boids** : Les boids suivent des règles simples pour simuler un comportement de vol réaliste.
-- **Contrôles** : Ajustez les paramètres de séparation, d'alignement et de cohésion via des sliders.
-- **Traçage** : Activez ou désactivez le traçage des trajectoires des boids.
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-## Dépendances
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-- TypeScript
-- Undici
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-## Auteur
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-Krozac
-
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```

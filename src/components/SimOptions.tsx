@@ -1,5 +1,5 @@
 import type { option } from "../types/sim.tsx"
-import { useState } from "react";
+
 
 
 export default function SimOptions({ options, values, simLoaded, onChange }: { options : option[] | undefined, values: Record<string, any>, simLoaded:Boolean, onChange:(id: string, value: any) => void}) {

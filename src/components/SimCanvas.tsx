@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState ,forwardRef, useImperativeHandle} from "react";
+import { useRef, forwardRef, useImperativeHandle} from "react";
 import type {Sim} from "../types/sim.tsx";
 
 export interface SimCanvasHandle {

@@ -114,7 +114,7 @@ html, body {
 }
 
 .noise {
-  background-image: url(noise-lines.png);
+  background-image: url(assets/noise-lines.png);
   background-size: 100px;
   background-repeat: repeat;
   opacity: 0.1;

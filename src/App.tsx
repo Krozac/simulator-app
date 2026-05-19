@@ -58,9 +58,12 @@ function App() {
 
   return (
     <>
+      <div className='noise overlay'></div>
+      <div className='blueprintgrid overlay'></div>
+      <div className='vignetting overlay'></div>
       <section className="page">
         <div id="content" className="sim-page">
-          <div id="sim-container" style={{ visibility: simLoaded ? "hidden" : "visible" }}>
+          {!simLoaded && <div id="sim-container" style={{ visibility: simLoaded ? "hidden" : "visible" }}>
             <div className="sim-container-back"></div>
             <div className="sim-container-back-small"></div>
               <SimTable
@@ -71,12 +74,12 @@ function App() {
               />
 
               <SimDetails sim={selectedSim} setSimDesc={setSimDesc} />
-            </div>
-            <div id="sim-description" style={{ visibility: simLoaded ? "hidden" : "visible" }}>
+            </div>}
+           {!simLoaded &&  <div id="sim-description" style={{ visibility: simLoaded ? "hidden" : "visible" }}>
                 <p className="sim-description-p">{simDesc}</p>
                 <div className="sim-container-back"></div>
                 <div className="sim-container-back-small"></div>
-            </div>
+            </div>}
             <SimCanvas sim={selectedSim} ref={canvasRef} setSimLoaded={setSimLoaded} simLoaded={simLoaded}  />
             
             <div id= "sim-options">

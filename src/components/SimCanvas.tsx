@@ -1,4 +1,4 @@
-import { useRef, forwardRef, useImperativeHandle} from "react";
+import { useRef, forwardRef, useImperativeHandle, useState} from "react";
 import type {Sim} from "../types/sim.tsx";
 
 export interface SimCanvasHandle {
@@ -14,44 +14,49 @@ interface SimCanvasProps {
 
 const SimCanvas = forwardRef<SimCanvasHandle, SimCanvasProps>(({ sim, setSimLoaded, simLoaded }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+  const [simInstance, setsimInstance] = useState<any | null>(null);
 
-  const startSimulation = (options?: Record<string, any>) => {
+  const startSimulation = async (options?: Record<string, any>) => {
     if (!sim || !canvasRef.current) return;
 
     const ctx = canvasRef.current.getContext("2d");
     if (!ctx) return;
 
-    // Remove previous script if exists
+    // stop previous loop FIRST
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+
     const existing = document.getElementById("sim-engine");
     if (existing) existing.remove();
 
-    const script = document.createElement("script");
-    script.id = "sim-engine";
-    script.type = "module";
-    script.src = sim.link; // e.g., "/dist/boids/main.js"
+    const mod = await import(sim.link);
+    
+    const simI = mod.createSim(ctx, options);
+    simI.init()
+    simI.start()
 
-    script.onload = () => {
-      // @ts-ignore
-      window.init(ctx, options ?? {});
-      // @ts-ignore
-      requestAnimationFrame(window.gameLoop);
-      setSimLoaded(true);
-    };
+    simI.onerror = console.error;
 
-    script.onerror = console.error;
-
-    document.body.appendChild(script);
+    setsimInstance(simI);
+    setSimLoaded(true)
   };
 
-  const stopSimulation =() =>{
-    // @ts-ignore
-    window.stopSim?.();
+  const stopSimulation = () => {
+    simInstance.stop();
+
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
 
     const existing = document.getElementById("sim-engine");
     if (existing) existing.remove();
 
     setSimLoaded(false);
-  }
+  };
 
   // Expose startSimulation to parent via ref
   useImperativeHandle(ref, () => ({

@@ -20,9 +20,18 @@ function App() {
       ecsData: null,
       description: "Simulation de comportement de boids",
     },
+    {
+      id: "sim_slime",
+      title: "Slime",
+      link: "../dist/slime/main.js",
+      datalink: "./dist/slime/types/sim_components.json",
+      ecsData: null,
+      description: "Simulation de comportement de slime",
+    },
   ]);
 
-  const [selectedSim, setSelectedSim] = useState<Sim | null>(null);
+  const [selectedSimId, setSelectedSimId] = useState<string | null>(null);
+  const selectedSim = simData.find(s => s.id === selectedSimId) || null;
   const [simLoaded, setSimLoaded] = useState<Boolean>(false);
   const [simDesc, setSimDesc] = useState<String>("");
   const [simOptionValues, setSimOptionValues] = useState<Record<string, any>>({});
@@ -30,19 +39,23 @@ function App() {
 
   // load JSON
   useEffect(() => {
-    const sim = simData[0];
+    if (!selectedSimId) return;
+
+    const sim = simData.find(s => s.id === selectedSimId);
+    if (!sim) return;
 
     fetch(sim.datalink)
       .then(r => r.json())
       .then((data) => {
-        setSimData(prev => {
-          const copy = [...prev];
-          copy[0].ecsData = data;
-          return copy;
-        });
-      })
-      .catch(console.error);
-  }, []);
+        setSimData(prev =>
+          prev.map(s =>
+            s.id === selectedSimId
+              ? { ...s, ecsData: data }
+              : s
+          )
+        );
+      });
+  }, [selectedSimId]);
 
   useEffect(() => {
     if (!selectedSim?.ecsData?.options) return;
@@ -54,7 +67,7 @@ function App() {
     });
 
     setSimOptionValues(defaults);
-  }, [selectedSim]);
+  }, [selectedSim?.ecsData]);
 
   return (
     <>
@@ -69,7 +82,7 @@ function App() {
               <SimTable
                 selectedSim={selectedSim}
                 simData={simData}
-                onSelect={setSelectedSim}
+                onSelect={setSelectedSimId}
                 setSimDesc={setSimDesc}
               />
 

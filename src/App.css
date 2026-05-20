@@ -336,6 +336,15 @@ html, body {
     cursor: pointer;
 }
 
+#simDetails{
+    overflow-x: auto;
+    overflow-y: hidden;
+    
+    display: flex;
+    flex-wrap: nowrap; /* forces single row */
+    gap: 16px;
+}
+
 .sim-table, .sim-details-table {
     display: inline-block;
     vertical-align: top;

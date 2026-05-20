@@ -22,11 +22,8 @@ export default function SimTable({ selectedSim, simData, onSelect, setSimDesc }:
             key={sim.title}
             className={`sim-row ${selectedSim?.id === sim.id ? 'selected' : ''}`}
             onClick={() => {
-               console.log(sim)
-                if (selectedSim?.id === sim.id) onSelect(null)
-                else onSelect(sim)
-              }
-            }
+              onSelect((prev : any) => prev === sim.id ? null : sim.id);
+            }}
             onMouseOver={() => setSimDesc(sim.description)}
           >
             <td>{sim.id}</td>

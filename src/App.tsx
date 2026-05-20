@@ -23,8 +23,8 @@ function App() {
     {
       id: "sim_slime",
       title: "Slime",
-      link: "../dist/slime/main.js",
-      datalink: "./dist/slime/types/sim_components.json",
+      link: "https://theoguenezan.fr/simulator-slime/slime/main.js",
+      datalink: "https://theoguenezan.fr/simulator-slime/slime/types/sim_components.json",
       ecsData: null,
       description: "Simulation de comportement de slime",
     },
